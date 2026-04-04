@@ -1,8 +1,6 @@
-import { href } from "react-router-dom";
 import { cn } from "../lib/utils";
 import { useEffect, useState } from "react";
-import { Menu, X } from "lucide-react";
-
+import { Menu, X, Moon, Sun } from "lucide-react";
 
 const navItems = [
   { name: "Home", href: "#hero" },
@@ -14,6 +12,30 @@ const navItems = [
 export const Navbar = () => {
   const [isScrolled, setIsScrolled] = useState(false);
   const [isMenuOpen, setIsMenuOpen] = useState(false);
+  const [isDarkMode, setIsDarkMode] = useState(false);
+
+  useEffect(() => {
+    const storedTheme = localStorage.getItem("theme");
+    if (storedTheme === "dark") {
+      setIsDarkMode(true);
+      document.documentElement.classList.add("dark");
+    } else {
+      setIsDarkMode(false);
+      document.documentElement.classList.remove("dark");
+    }
+  }, []);
+
+  const toggleTheme = () => {
+    if (isDarkMode) {
+      document.documentElement.classList.remove("dark");
+      localStorage.setItem("theme", "light");
+      setIsDarkMode(false);
+    } else {
+      document.documentElement.classList.add("dark");
+      localStorage.setItem("theme", "dark");
+      setIsDarkMode(true);
+    }
+  };
   useEffect(() => {
     const handleScroll = () => {
       setIsScrolled(window.scrollY > 10);
@@ -38,7 +60,7 @@ export const Navbar = () => {
           <span className="text-glow text-foreground"> Dvleu </span> Portafolio
         </a>
         {/* Desktop */}
-        <div className="hidden md:flex space-x-8">
+        <div className="hidden md:flex space-x-8 items-center">
           {navItems.map((item, key) => (
             <a
               key={key}
@@ -48,12 +70,23 @@ export const Navbar = () => {
               {item.name}
             </a>
           ))}
+          <button
+            onClick={toggleTheme}
+            className="p-2 rounded-full transition-colors duration-300 hover:bg-primary/20"
+            aria-label="Toggle theme"
+          >
+            {isDarkMode ? (
+              <Sun className="h-5 w-5 text-yellow-400" />
+            ) : (
+              <Moon className="h-5 w-5 text-blue-900" />
+            )}
+          </button>
         </div>
         {/* Mobile */}
         <button
           onClick={() => setIsMenuOpen((prev) => !prev)}
           className="md:hidden p-2 text-foreground z-50"
-          aria-label={isMenuOpen? "Close Menu": "Open Menu"}
+          aria-label={isMenuOpen ? "Close Menu" : "Open Menu"}
         >
           {" "}
           {isMenuOpen ? <X size={24} /> : <Menu size={24} />}{" "}
@@ -68,7 +101,7 @@ export const Navbar = () => {
               : "opacity-0 pointer-events-none",
           )}
         >
-          <div className="flex flex-col space-y-8 text-xl">
+          <div className="flex flex-col space-y-8 text-xl items-center">
             {navItems.map((item, key) => (
               <a
                 key={key}
@@ -79,6 +112,17 @@ export const Navbar = () => {
                 {item.name}
               </a>
             ))}
+            <button
+              onClick={toggleTheme}
+              className="p-2 rounded-full transition-colors duration-300 hover:bg-primary/20"
+              aria-label="Toggle theme"
+            >
+              {isDarkMode ? (
+                <Sun className="h-5 w-5 text-yellow-400" />
+              ) : (
+                <Moon className="h-5 w-5 text-blue-900" />
+              )}
+            </button>
           </div>
         </div>
       </div>
