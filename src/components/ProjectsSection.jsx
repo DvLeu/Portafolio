@@ -25,6 +25,14 @@ const projects = [
     tags: ["React", "TypeScript", "Tailwind CSS", "Vite", "Responsive Design"],
     githubUrl: "https://github.com/DvLeu/Portafolio",
   },
+    {
+    id: 4,
+    title: "Cineteca-Digital (Digital Cinematheque)",
+    description: "Digital Cinematheque built with Angular for the frontend and Python with Flask for the backend, connected to a Cassandra database and containerized with Docker for flexibility and scalability.",
+    image: "/projects/Cineteca.png",
+    tags: ["Python","Flask" ,"JavaScript","TypeScript" ,"Angular", "CSS", "HTML","Docker"],
+    githubUrl: "https://github.com/DvLeu/CinetecaDigital",
+  },
 ];
 
 export const ProjectSection = () => {

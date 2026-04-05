@@ -57,7 +57,7 @@ export const Navbar = () => {
           href="#hero"
         >
           <span className="relative z-10" />
-          <span className="text-glow text-foreground"> Dvleu </span> Portafolio
+          <span className="text-glow text-foreground">Dvleu</span> Portafolio
         </a>
         {/* Desktop */}
         <div className="hidden md:flex space-x-8 items-center">
