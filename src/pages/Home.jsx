@@ -12,8 +12,9 @@ import { SpeedInsights } from "@vercel/speed-insights/react"
 export const Home = () => {
   return (
     <div className="min-h-screen bg-background text-foreground overflow-x-hidden">
-      {/* Analytics from vercel */}
+      {/* Analytics from vercel and SpeedInsights */}
       <Analytics/>
+      <SpeedInsights/>
       {/*Background Effects */}
       <StarBackground />
       {/*Navbar */}
