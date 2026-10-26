@@ -1,218 +1,240 @@
+import { useState } from "react";
 import {
   Instagram,
   Linkedin,
   Mail,
   MapIcon,
   Phone,
-  Twitch,
-  Youtube,
-  X,
   Send,
+  Twitch,
+  X,
+  Youtube,
 } from "lucide-react";
-import { cn } from "../lib/utils";
-import { useState } from "react";
 import { toast, ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
+import { cn } from "../lib/utils";
+import { SectionHeader } from "./SectionHeader";
+
+// Web3Forms delivers submissions to the inbox tied to the access key
+const WEB3FORMS_URL = "https://api.web3forms.com/submit";
+const WEB3FORMS_KEY = import.meta.env.VITE_WEB3FORMS_KEY;
+
+// `href` is optional: details without one render as plain text
+const contactDetails = [
+  {
+    label: "Email",
+    value: "davidleonsalasdev@gmail.com",
+    href: "mailto:davidleonsalasdev@gmail.com",
+    icon: Mail,
+  },
+  {
+    label: "Phone",
+    value: "+52 229 177 9456",
+    href: "tel:+522291779456",
+    icon: Phone,
+  },
+  { label: "Location", value: "Veracruz, Mexico", icon: MapIcon },
+];
+
+const socials = [
+  {
+    label: "LinkedIn",
+    href: "https://www.linkedin.com/in/david-leon-salas-604519243",
+    icon: Linkedin,
+  },
+  {
+    label: "Instagram",
+    href: "https://www.instagram.com/davidsleonn/",
+    icon: Instagram,
+  },
+  {
+    label: "YouTube",
+    href: "https://www.youtube.com/@Pambasico",
+    icon: Youtube,
+  },
+  { label: "Twitch", href: "https://www.twitch.tv/pambasico", icon: Twitch },
+  { label: "X", href: "https://x.com/Pambasico", icon: X },
+];
+
+const emptyForm = { name: "", email: "", message: "" };
+
+const fields = [
+  {
+    id: "name",
+    label: "Your Name",
+    type: "text",
+    placeholder: "Type your name...",
+  },
+  {
+    id: "email",
+    label: "Your Email",
+    type: "email",
+    placeholder: "Type your email...",
+  },
+  {
+    id: "message",
+    label: "Your Message",
+    type: "textarea",
+    placeholder: "Type your message...",
+  },
+];
+
+const fieldClassName =
+  "w-full px-4 py-3 rounded-md border bg-background focus:outline-none focus:border-primary";
 
 export const ContactSection = () => {
-  const [formData, setFormData] = useState({
-    name: "",
-    email: "",
-    message: "",
-  });
+  const [formData, setFormData] = useState(emptyForm);
+  const [isSending, setIsSending] = useState(false);
 
   const handleChange = (e) => {
     const { name, value } = e.target;
     setFormData((prev) => ({ ...prev, [name]: value }));
   };
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
+    setIsSending(true);
 
-    if (!formData.name || !formData.email || !formData.message) {
-      toast.error("Please fill all fields!");
-      return;
+    try {
+      const response = await fetch(WEB3FORMS_URL, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          Accept: "application/json",
+        },
+        body: JSON.stringify({
+          ...formData,
+          access_key: WEB3FORMS_KEY,
+          subject: `New portfolio message from ${formData.name}`,
+          botcheck: e.target.botcheck.checked,
+        }),
+      });
+      const result = await response.json();
+      if (!result.success) throw new Error(result.message);
+
+      toast.success("Message sent successfully! I'll get back to you soon.");
+      setFormData(emptyForm);
+    } catch {
+      toast.error("Something went wrong. Please email me directly.");
+    } finally {
+      setIsSending(false);
     }
-
-    toast.success("Message sent successfully! I'll get back to you soon.");
-    setFormData({ name: "", email: "", message: "" });
   };
+
   return (
     <section id="contact" className="py-24 px-4 relative bg-secondary/30">
       <div className="container mx-auto max-w-5xl">
-        <h2 className="text-3xl md:text-4xl font-bold mb-4 text-center">
-          Get In <span className="text-primary">Touch</span>
-        </h2>
+        <SectionHeader
+          title="Get In"
+          highlight="Touch"
+          subtitle="Open to backend and data engineering opportunities."
+        />
 
-        <p className="text-center text-muted-foreground mb-12 max-w-2xl mx-auto">
-          Have a project in mind? Feel free to reach out!
-        </p>
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-12">
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-12 text-left">
           <div className="space-y-8">
-            <h3 className="text-2xl font-semibold mb-6">
-              {" "}
-              Contact Information
-            </h3>
-            <div className="space-y-6 justify-center">
-              <div className="flex items-center space-x-4">
-                <div className="p-3 rounded-full bg-primary/10">
-                  <Mail className="h-6 w-6 text-primary" />{" "}
-                </div>
-                <div>
-                  <h4 className="text-left text-xl font-semibold text-primary">
-                    Email
-                  </h4>
-                  <a
-                    href="mailto:davidleonsalasdev@gmail.com"
-                    className="text-muted-foreground hover:text-primary transition-colors"
-                  >
-                    davidleonsalasdev@gmail.com
-                  </a>
-                </div>
-              </div>
-              <div className="flex items-center space-x-4">
-                <div className="p-3 rounded-full bg-primary/10">
-                  <Phone className="h-6 w-6 text-primary" />{" "}
-                </div>
-                <div>
-                  <h4 className="text-left text-xl font-semibold text-primary">
-                    Phone
-                  </h4>
-                  <a
-                    href="tel:+522291779456"
-                    className="text-muted-foreground hover:text-primary transition-colors"
-                  >
-                    +52 2291779456
-                  </a>
-                </div>
-              </div>
-              <div className="flex items-center space-x-4">
-                <div className="p-3 rounded-full bg-primary/10">
-                  <MapIcon className="h-6 w-6 text-primary" />{" "}
-                </div>
-                <div>
-                  <h4 className="text-left text-xl font-semibold text-primary">
-                    Location
-                  </h4>
-                  <a className="text-muted-foreground hover:text-primary transition-colors">
-                    Veracruz, Mexico
-                  </a>
-                </div>
-              </div>
-            </div>
-            <div className="pt-8">
-              <h4 className="font-medium mb-4">Connect with me!</h4>
-              <div className="flex space-x-4 justify-center">
-                <a
-                  href="https://www.linkedin.com/in/david-leon-salas-604519243"
-                  target="_blank"
-                  rel="noopener noreferrer"
-                >
-                  <Linkedin />
-                </a>
-                <a
-                  href="https://www.instagram.com/davidsleonn/?hl=es"
-                  target="_blank"
-                  rel="noopener noreferrer"
-                >
-                  <Instagram />
-                </a>
-                <a
-                  href="https://www.youtube.com/@Pambasico"
-                  target="_blank"
-                  rel="noopener noreferrer"
-                >
-                  <Youtube />
-                </a>
-                <a
-                  href="https://www.twitch.tv/pambasico"
-                  target="_blank"
-                  rel="noopener noreferrer"
-                >
-                  <Twitch />
-                </a>
-                <a
-                  href="https://x.com/Pambasico"
-                  target="_blank"
-                  rel="noopener noreferrer"
-                >
-                  <X />
-                </a>
+            <h3 className="text-2xl font-semibold">Contact</h3>
+
+            <ul className="space-y-6">
+              {contactDetails.map(({ label, value, href, icon }) => {
+                const Icon = icon;
+                return (
+                  <li key={label} className="flex items-start gap-3">
+                    <Icon className="h-5 w-5 text-primary shrink-0 mt-0.5" />
+                    <div>
+                      <h4 className="text-sm font-medium text-muted-foreground">
+                        {label}
+                      </h4>
+                      {href ? (
+                        <a
+                          href={href}
+                          className="hover:text-primary transition-colors"
+                        >
+                          {value}
+                        </a>
+                      ) : (
+                        <p>{value}</p>
+                      )}
+                    </div>
+                  </li>
+                );
+              })}
+            </ul>
+
+            <div className="pt-4">
+              <h4 className="font-medium mb-4">Elsewhere</h4>
+              <div className="flex gap-4">
+                {socials.map(({ label, href, icon }) => {
+                  const Icon = icon;
+                  return (
+                    <a
+                      key={label}
+                      href={href}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      aria-label={label}
+                      className="text-foreground/80 hover:text-primary transition-colors"
+                    >
+                      <Icon />
+                    </a>
+                  );
+                })}
               </div>
             </div>
           </div>
+
           <div className="bg-card p-8 rounded-lg shadow-xs">
-            <h3 className="text-2xl font-semibold mb-6">Send a Message!</h3>
+            <h3 className="text-2xl font-semibold mb-6">Send a message</h3>
             <form className="space-y-6" onSubmit={handleSubmit}>
-              <div>
-                <label
-                  htmlFor="name"
-                  className="block text-sm font-medium mb-2"
-                >
-                  {" "}
-                  Your Name
-                </label>
-                <input
-                  type="text"
-                  id="name"
-                  name="name"
-                  value={formData.name}
-                  onChange={handleChange}
-                  required
-                  className="w-full px-4 py-3 rounded-md border border-input bg-background focus:outline-none"
-                  placeholder="Type your Name..."
-                />{" "}
-              </div>
-              <div>
-                <label
-                  htmlFor="name"
-                  className="block text-sm font-medium mb-2"
-                >
-                  {" "}
-                  Your Email
-                </label>
-                <input
-                  type="email"
-                  id="email"
-                  name="email"
-                  value={formData.email}
-                  onChange={handleChange}
-                  required
-                  className="w-full px-4 py-3 rounded-md border border-input bg-background focus:outline-none"
-                  placeholder="Type your Email..."
-                />{" "}
-              </div>
-              <div>
-                <label
-                  htmlFor="name"
-                  className="block text-sm font-medium mb-2"
-                >
-                  {" "}
-                  Your Message
-                </label>
-                <textarea
-                  id="message"
-                  name="message"
-                  value={formData.message}
-                  onChange={handleChange}
-                  required
-                  className="w-full px-4 py-3 rounded-md border border-input bg-background focus:outline-none resize-none"
-                  placeholder="Type your message..."
-                />{" "}
-              </div>
+              {fields.map(({ id, label, type, placeholder }) => {
+                const isTextarea = type === "textarea";
+                const Field = isTextarea ? "textarea" : "input";
+                return (
+                  <div key={id}>
+                    <label
+                      htmlFor={id}
+                      className="block text-sm font-medium mb-2"
+                    >
+                      {label}
+                    </label>
+                    <Field
+                      id={id}
+                      name={id}
+                      type={isTextarea ? undefined : type}
+                      value={formData[id]}
+                      onChange={handleChange}
+                      placeholder={placeholder}
+                      required
+                      className={cn(
+                        fieldClassName,
+                        isTextarea && "resize-none h-32",
+                      )}
+                    />
+                  </div>
+                );
+              })}
+
+              {/* Honeypot: hidden from people; bots that tick it get rejected */}
+              <input
+                type="checkbox"
+                name="botcheck"
+                className="hidden"
+                tabIndex={-1}
+                autoComplete="off"
+              />
+
               <button
                 type="submit"
-                className={cn(
-                  "cosmic-button w-full flex items-center justify-center gap-2",
-                )}
+                disabled={isSending}
+                className="cosmic-button w-full flex items-center justify-center gap-2 disabled:opacity-60 disabled:pointer-events-none"
               >
-                Send Message
+                {isSending ? "Sending..." : "Send Message"}
                 <Send size={16} />
               </button>
             </form>
           </div>
         </div>
       </div>
+
       <ToastContainer position="bottom-right" autoClose={3000} />
     </section>
   );
