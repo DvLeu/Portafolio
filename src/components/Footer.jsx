@@ -2,15 +2,20 @@ import { ArrowUp } from "lucide-react";
 
 export const Footer = () => {
   return (
-    <footer className="py-12 px-4 bg-card relative border-t border-border mt-12 pt-8 flex flex-wrap justify-between items-center">
-      {" "}
-      <p className="text-sm text-muted-foreground">
-        {" "}
-        &copy; {new Date().getUTCFullYear()} Dvleu All rights reserved.{" "}
-      </p>
-      <a href="#hero" className="p-2 rounded-full bg-primary/10 hover:bg-primary/20 text-primary transition-colors">
-        <ArrowUp/>
-
+    <footer className="relative z-10 mt-12 px-4 py-8 bg-card border-t flex flex-wrap justify-between items-center">
+      <div className="text-sm text-muted-foreground text-left">
+        <p>
+          &copy; {new Date().getFullYear()} David León Salas. All rights
+          reserved.
+        </p>
+        <p className="text-xs">Logo created with ChatGPT by OpenAI.</p>
+      </div>
+      <a
+        href="#hero"
+        aria-label="Back to top"
+        className="p-2 rounded-full bg-primary/10 hover:bg-primary/20 text-primary transition-colors"
+      >
+        <ArrowUp />
       </a>
     </footer>
   );
