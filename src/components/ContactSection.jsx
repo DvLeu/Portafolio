@@ -33,7 +33,7 @@ const contactDetails = [
     href: "tel:+522291779456",
     icon: Phone,
   },
-  { label: "Location", value: "Veracruz, Mexico", icon: MapIcon },
+  { label: "Location", value: "Veracruz, Mexico Open to remote", icon: MapIcon },
 ];
 
 const socials = [

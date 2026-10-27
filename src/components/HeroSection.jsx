@@ -6,7 +6,7 @@ const profile = {
   role: "Software Engineer",
   focus: ["Backend", "Data", "Cloud"],
   stack: ["Python", "FastAPI", "Java", "AWS"],
-  location: "Veracruz, MX",
+  location: ["Veracruz, MX", "Open to remote"]
 };
 
 const socials = [
